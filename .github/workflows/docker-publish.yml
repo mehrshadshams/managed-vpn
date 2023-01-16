@@ -95,6 +95,9 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      - name: Test
+        run: docker images
+
       - name: Tag image
         if: github.event_name != 'pull_request'
         run: docker tag ${{ steps.meta.outputs.tags }}@${{ steps.build-and-push.outputs.digest }} registry.digitalocean.com/managedvpn/managed-vpn:main
