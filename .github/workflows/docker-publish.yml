@@ -97,7 +97,7 @@ jobs:
 
       - name: Tag image
         if: github.event_name != 'pull_request'
-        run: docker tag ${{ steps.meta.outputs.tags }} registry.digitalocean.com/managedvpn/managed-vpn:main
+        run: docker tag ${{ steps.meta.outputs.tags }}@${{ steps.build-and-push.outputs.digest }} registry.digitalocean.com/managedvpn/managed-vpn:main
 
       - name: Push image to DO Container Registry
         if: github.event_name != 'pull_request'
