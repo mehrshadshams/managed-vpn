@@ -99,11 +99,11 @@ jobs:
         if: github.event_name != 'pull_request'
         run:
           docker tag sample/my-page \
-          registry.digitalocean.com/managedvpn/${{ env.IMAGE_NAME }}
+          registry.digitalocean.com/managedvpn/managed-vpn:main
 
       - name: Push image to DO Container Registry
         if: github.event_name != 'pull_request'
-        run: docker push registry.digitalocean.com/managedvpn/${{ env.IMAGE_NAME }}
+        run: docker push registry.digitalocean.com/managedvpn/managed-vpn:main
 
 
       # Sign the resulting Docker image digest except on PRs.
