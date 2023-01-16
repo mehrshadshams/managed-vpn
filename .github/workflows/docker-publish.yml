@@ -45,6 +45,15 @@ jobs:
         with:
           cosign-release: 'v1.11.0'
 
+      - name: Install doctl
+        if: github.event_name != 'pull_request'
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: Log in to DO Container Registry
+        if: github.event_name != 'pull_request'
+        run: doctl registry login --expiry-seconds 600
 
       # Workaround: https://github.com/docker/build-push-action/issues/461
       - name: Setup Docker buildx
@@ -81,6 +90,16 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Tag image
+        if: github.event_name != 'pull_request'
+        run:
+          docker tag sample/my-page \
+          registry.digitalocean.com/managedvpn/${{ steps.meta.outputs.tags }}
+
+      - name: Push image to DO Container Registry
+        if: github.event_name != 'pull_request'
+        run: docker push registry.digitalocean.com/managedvpn/${{ steps.meta.outputs.tags }}
 
 
       # Sign the resulting Docker image digest except on PRs.
